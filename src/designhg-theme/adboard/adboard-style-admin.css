@@ -1,0 +1,38 @@
+/* AdBoards - admin */
+
+.adboard-meta-box table {
+	width: 100%;
+}
+
+.adboard-meta-box table th {
+	line-height: 2;
+	text-align: right;
+	vertical-align: top;
+	padding-right: 1rem;
+}
+
+.adboard-meta-box .preview-thumb {
+	max-width: 150px;
+	max-height: 150px;
+}
+
+.dhg-status.status-active {
+	background-color: #d1fae5;
+	color: #065f46;
+}
+
+.dhg-status.status-scheduled {
+	background-color: #fef3c7;
+	color: #92400e;
+}
+
+.dhg-status.status-expired {
+	background-color: #f3f4f6;
+	color: #6b7280;
+}
+
+.dhg-status.status-inactive,
+.dhg-status.status-no-image {
+	background-color: #fee2e2;
+	color: #991b1b;
+}
