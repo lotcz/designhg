@@ -38,7 +38,7 @@ services:
     working_dir: /var/www/wordpress
     entrypoint: >
       sh -c "
-        ln -sfn /var/www/designhg-theme /var/www/wordpress/wp-content/plugins/designhg-theme &&
+        ln -sfn /var/www/designhg-theme /var/www/wordpress/wp-content/themes/designhg-theme &&
         chown www-data:www-data -R /var/www/wordpress &&
         chmod a+rwx -R /var/www/wordpress -R &&
         php-fpm

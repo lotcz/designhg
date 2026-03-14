@@ -1,0 +1,32 @@
+/*
+Theme Name: Design H&G
+Template: magplus
+Author: Karel
+Description: Téma pro Design H&G vycházející z MagPlus
+Version: 1.0.0
+Updated: 2026-03-14 13:08:33
+*/
+
+body { background:#fff;}
+.tt-header .logo {height:60px;line-height:60px}
+.tt-footer {margin-top:60px;}
+.tt-recent-news{ height:auto !important;}
+
+.tt-share-list a { color:#fff !important;}
+.tt-share-list a:hover { color:#000 !important;}
+
+
+.single-post #content-wrapper .container .col-md-8 a{ color: #c32c2c;text-decoration: underline;font-weight:bold;}
+
+@media (min-width: 991px) {.tt-header .cmn-mobile-switch{ display:none !important;}}
+@media (max-width: 991px) {
+.tt-header .cmn-mobile-switch {  top: 50%;  bottom: 20px;  margin-top: -12px;width:25px !important;}
+.tt-header .logo img{ max-width:80%; margin-top:-5px;}
+}
+.tt-header .cmn-mobile-switch::before { top: 0px;}
+.tt-header .cmn-mobile-switch::before, .tt-header .cmn-mobile-switch::after {  height: 4px;}
+
+.tt-header .cmn-mobile-switch span { top: 1px;  height: 4px;margin-top:5px;}
+
+.tt-header .cmn-mobile-switch::after { top: 12px;}
+.tt-header .cmn-mobile-switch::before, .tt-header .cmn-mobile-switch::after { height: 4px;}
