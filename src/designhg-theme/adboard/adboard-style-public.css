@@ -1,28 +1,65 @@
 /* AdBoards - public */
 
-body.adboard #wrapper {
+@media (min-width: 1310px) {
 
-}
+	body.adboard #wrapper {
+		background-position: top center;
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+	}
 
-body.adboard .tt-header-wrapper,
-body.adboard #content-wrapper,
-body.adboard #page-wrapper {
-	background: none;
-}
+	body.adboard .tt-header-wrapper,
+	body.adboard #content-wrapper,
+	body.adboard #page-wrapper {
+		background: none;
+	}
 
-body.adboard .container {
-	background: #fff;
-}
+	body.adboard .tt-header-wrapper .container,
+	body.adboard .toggle-block .toggle-block-container,
+	body.adboard #content-wrapper > .container,
+	body.adboard #page-wrapper .container {
+		background: #fff;
+	}
 
-body.adboard .tt-footer .container {
-	background: #000;
-}
+	body.adboard .toggle-block .toggle-block-container .top-line .container {
+		background: none;
+	}
 
-body.adboard .empty-space {
-	display: none;
-}
+	body.adboard .tt-header-wrapper,
+	body.adboard .tt-header .top-inner {
+		border: 0;
+	}
 
-body.adboard #page-wrapper .container {
-	padding-top: 55px;
-	padding-bottom: 55px;
+	body.adboard .tt-header .top-inner {
+		padding: 0;
+	}
+
+	body.adboard .tt-header .top-inner .container {
+		padding: 35px 0;
+	}
+
+	body.adboard .tt-header .cmn-mobile-switch {
+		bottom: -35px;
+	}
+
+	body.adboard .tt-header .tt-s-popup-btn {
+		bottom: -50px;
+	}
+
+	body.adboard .toggle-block .toggle-block-container {
+		margin: auto;
+		width: 1280px;
+		border-top: 1px solid #eaeaea;
+		border-bottom: 1px solid #eaeaea;
+	}
+
+	body.adboard .empty-space {
+		display: none;
+	}
+
+	body.adboard #page-wrapper .container {
+		padding-top: 55px;
+		padding-bottom: 55px;
+	}
+
 }

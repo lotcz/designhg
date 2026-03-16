@@ -158,7 +158,7 @@ function adboard_render_meta_box($post) {
 					</div>
 
 					<div>
-						<p class="description">Doporučená velikost: 1280×300, viz <a href="">manuál</a>.</p>
+						<p class="description">Doporučená velikost: 1920×1080, viz <a href="<?php echo get_stylesheet_directory_uri() ?>/adboard/adboard-manual.pdf">manuál</a>.</p>
 					</div>
 
 					<div>
