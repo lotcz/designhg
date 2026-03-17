@@ -30,14 +30,35 @@
   <?php
   $ad = dhg_adboard_get_current();
   $adboardStyle = "";
+  $adboardScript = "";
   if ($ad) {
-	  $link = dhg_adboard_get_link_url($ad->ID);
 	  $img = dhg_adboard_get_image_url($ad->ID);
-	  $adboardStyle = "background-image: url('$img');";
+	  $adboardStyle = "style=\"background-image: url('$img');\"";
+	  $link = dhg_adboard_get_link_url($ad->ID);
+	  if ($link) {
+		  $adboardScript = "onclick=\"window.open('$link', '_blank');return false;\"";
+		  ?>
+		  <script>
+			  window.addEventListener(
+				  'load',
+				  () => {
+					  const insideElements = document.querySelectorAll(
+						  '#wrapper .container, #wrapper .toggle-block-container, #wrapper .tt-footer, #content-wrapper > .visible'
+					  );
+					  insideElements.forEach(
+						  (el) => {
+							  el.addEventListener('click', (e) => e.stopPropagation());
+						  }
+					  )
+				  }
+			  );
+		  </script>
+		  <?php
+	  }
   }
   ?>
 
-  <div id="wrapper" style="<?php echo $adboardStyle?>">
+  <div id="wrapper" <?php echo $adboardStyle?> <?php echo $adboardScript?>>
 
   <?php magplus_sideheader(); ?>
   <?php search_popup(); ?>

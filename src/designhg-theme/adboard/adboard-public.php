@@ -70,13 +70,18 @@ add_filter(
 	'body_class',
 	function($classes) {
 		$ad = dhg_adboard_get_current();
-		if ($ad) {
-			$classes[] = 'adboard';
-			$position = dhg_adboard_get_position($ad->ID) ?: 'sides';
-			$classes[] = 'adboard-' . $position;
+		if (!$ad) return $classes;
+
+		$classes[] = 'adboard';
+		$position = dhg_adboard_get_position($ad->ID) ?: 'sides';
+		$classes[] = 'adboard-' . $position;
+		$link = dhg_adboard_get_link_url($ad->ID);
+		if ($link) {
+			$classes[] = 'adboard-has-link';
 		}
 		$has_heading = magplus_get_opt('title-wrapper-enable') || !class_exists('ReduxFramework') && !is_single();
 		$classes[] = ($has_heading) ? 'has-title-heading' : 'no-title-heading';
+
 		return $classes;
 	}
 );

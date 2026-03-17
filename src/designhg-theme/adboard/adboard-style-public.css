@@ -9,6 +9,16 @@
 		background-attachment: fixed;
 	}
 
+	body.adboard-has-link #wrapper {
+		cursor: pointer;
+	}
+
+	body.adboard-has-link #wrapper .container,
+	body.adboard-has-link #wrapper .tt-footer,
+	body.adboard-has-link #wrapper #content-wrapper > .visible {
+		cursor: default;
+	}
+
 	body.adboard .tt-header-wrapper,
 	body.adboard #content-wrapper,
 	body.adboard #page-wrapper {
@@ -69,6 +79,7 @@
 		margin-right: auto;
 		width: 1280px;
 		padding: 0;
+		background-color: black;
 	}
 
 	body.adboard .tt-heading h1 {
@@ -87,10 +98,6 @@
 	body.adboard-full header .tt-header-wrapper,
 	body.adboard-full header .tt-header-wrapper .nav-more {
 		margin-top: 180px;
-	}
-
-	body.adboard-full .tt-heading:before {
-		display: none;
 	}
 
 	body.adboard-full .tt-heading {
