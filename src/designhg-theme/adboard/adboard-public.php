@@ -6,7 +6,7 @@ require_once __DIR__ . '/adboard-common.php';
 
 add_action(
 	'wp_enqueue_scripts',
-	function() {
+	function () {
 		wp_enqueue_style(
 			'designhg-adboard-style',
 			get_stylesheet_directory_uri() . '/adboard/adboard-style-public.css',
@@ -38,22 +38,25 @@ function dhg_adboard_select_active_ad(): ?WP_Post {
 		],
 		[
 			'key' => DHG_ADBOARD_META_IMAGE_URL,
+			'compare' => 'EXISTS',
+		],
+		[
+			'key' => DHG_ADBOARD_META_IMAGE_URL,
 			'compare' => '!=',
 			'value' => '',
-		],
+		]
 	];
 
 	$args = [
 		'post_type' => 'adboard',
 		'post_status' => 'publish',
-		'posts_per_page' => 1,
+		'posts_per_page' => -1,
 		'meta_query' => $meta_query,
-		'orderby' => 'rand',
 		'no_found_rows' => true,
 	];
 
 	$result = get_posts($args);
-	return !empty($result) ? $result[0] : null;
+	return empty($result) ? null : $result[array_rand($result)];
 }
 
 $dhg_adboard_current = false;
@@ -68,7 +71,7 @@ function dhg_adboard_get_current(): ?WP_Post {
 
 add_filter(
 	'body_class',
-	function($classes) {
+	function ($classes) {
 		$ad = dhg_adboard_get_current();
 		if (!$ad) return $classes;
 
