@@ -3,7 +3,8 @@
 @media (min-width: 1310px) {
 
 	body.adboard #wrapper {
-		background-position: top center;
+		background-position-x: center;
+		background-position-y: 40px;
 		background-repeat: no-repeat;
 		background-attachment: fixed;
 	}
@@ -39,7 +40,7 @@
 	}
 
 	body.adboard .tt-header .cmn-mobile-switch {
-		bottom: -35px;
+		display: none;
 	}
 
 	body.adboard .tt-header .tt-s-popup-btn {
@@ -57,9 +58,56 @@
 		display: none;
 	}
 
-	body.adboard #page-wrapper .container {
+	body.adboard #page-wrapper > .container,
+	body.adboard #content-wrapper > .container {
 		padding-top: 55px;
 		padding-bottom: 55px;
+	}
+
+	body.adboard .tt-heading {
+		margin-left: auto;
+		margin-right: auto;
+		width: 1280px;
+		padding: 0;
+	}
+
+	body.adboard .tt-heading h1 {
+		padding-top: 44px;
+		padding-bottom: 44px;
+	}
+
+	/* FULL */
+
+	body.home.adboard-full #content-wrapper > .container,
+	body.no-title-heading.adboard-full #content-wrapper > .container {
+		margin-top: 220px;
+		padding-top: 180px;
+	}
+
+	body.adboard-full header .tt-header-wrapper,
+	body.adboard-full header .tt-header-wrapper .nav-more {
+		margin-top: 180px;
+	}
+
+	body.adboard-full .tt-heading:before {
+		display: none;
+	}
+
+	body.adboard-full .tt-heading {
+		margin-top: 220px;
+	}
+
+	body.adboard-full .tt-heading .container {
+		padding-top: 180px;
+	}
+
+	body.adboard-full header.stick .tt-header-wrapper,
+	body.adboard-full header.stick .tt-header-wrapper .nav-more {
+		margin-top: 0;
+	}
+
+	body.adboard-full .tt-header-height {
+		display: none;
 	}
 
 }

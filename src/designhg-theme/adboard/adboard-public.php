@@ -75,6 +75,8 @@ add_filter(
 			$position = dhg_adboard_get_position($ad->ID) ?: 'sides';
 			$classes[] = 'adboard-' . $position;
 		}
+		$has_heading = magplus_get_opt('title-wrapper-enable') || !class_exists('ReduxFramework') && !is_single();
+		$classes[] = ($has_heading) ? 'has-title-heading' : 'no-title-heading';
 		return $classes;
 	}
 );
