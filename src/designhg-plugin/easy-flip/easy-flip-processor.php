@@ -19,7 +19,7 @@ function designhg_easy_flip_set_last($last) {
 }
 
 function designhg_flipbook_exists(): bool {
-	return class_exists('Real3DFlipbook') || function_exists('real3d_flipbook_init') || post_type_exists(DESIGNHG_EASY_FLIP_FLIPBOOK_CPT);
+	return function_exists('real3d_flipbook_admin') || post_type_exists(DESIGNHG_EASY_FLIP_FLIPBOOK_CPT);
 }
 
 function designhg_imageext_exists(): bool {
@@ -90,10 +90,6 @@ function designhg_create_flipbook(string $title, int $attachment_id, string $pdf
 }
 
 function designhg_build_shortcode(int $flipbook_id): string {
-	/*
-	 * Real3D Flipbook shortcode: [real3dflipbook id="X"]
-	 * Some versions also accept [flipbook id="X"] – adjust if needed.
-	 */
 	return sprintf('[real3dflipbook id="%d"]', $flipbook_id);
 }
 

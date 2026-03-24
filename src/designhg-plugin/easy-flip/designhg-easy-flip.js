@@ -23,11 +23,6 @@
 
 	let selectedFile = null;
 
-	/* ── Drop zone – click to open picker ──────────────────── */
-	$dropZone.on('click', function () {
-		$fileInput.trigger('click');
-	});
-
 	$fileInput.on('change', function () {
 		handleFile(this.files[0]);
 	});
@@ -99,7 +94,6 @@
 
 		$form.hide();
 		$result.hide();
-		$progressMsg.text(i18n.processing);
 		$progress.show();
 
 		$.ajax({
@@ -113,13 +107,13 @@
 				if (res.success) {
 					showSuccess(res.data);
 				} else {
-					showError(res.data.message || i18n.error);
+					showError(res.data.message);
 					$form.show();
 				}
 			},
 			error: function () {
 				$progress.hide();
-				showError(i18n.error);
+				showError();
 				$form.show();
 			},
 		});
@@ -127,7 +121,7 @@
 
 	/* ── Result helpers ─────────────────────────────────────── */
 	function showSuccess(data) {
-		let html = '<h3>✓ ' + escHtml(i18n.success) + '</h3>';
+		let html = '<h3>✓ ' + escHtml('OK') + '</h3>';
 
 		if (data.page_url) {
 			html += '<p><strong>Page:</strong> <a href="' + escAttr(data.page_url) + '" target="_blank">'
@@ -153,7 +147,7 @@
 
 	function showError(msg) {
 		$result.addClass('r3dh-result--error')
-			.html('<h3>Error</h3><p>' + escHtml(msg) + '</p>')
+			.html('<h3>Error</h3><p>' + escHtml(msg || 'Chyba') + '</p>')
 			.show();
 	}
 
