@@ -117,7 +117,7 @@
 
 	/* ── Result helpers ─────────────────────────────────────── */
 	function showSuccess(data) {
-		let html = '<h3>✓ ' + escHtml('OK') + '</h3>';
+		let html = '<h3>✓ ' + escHtml('Flipbook vytvořen') + '</h3>';
 
 		if (data.page_url) {
 			html += '<p><strong>Stránka:</strong> <a href="' + escAttr(data.page_url) + '" target="_blank">'

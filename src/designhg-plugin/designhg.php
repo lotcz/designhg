@@ -5,7 +5,7 @@
  * Version: 1.0.0
  * Author: Karel
  * Text Domain: designhg
- * Requires at least: 6.0
+ * Requires at least: 5.7
  * Requires PHP: 7.4
  * WC requires at least: 8.0
  * WC tested up to: 9.0
