@@ -14,8 +14,6 @@
 	const $form = $('#r3dhForm');
 	const $fileInfo = $('#r3dhFileInfo');
 	const $titleInput = $('#r3dhTitle');
-	const $slugInput = $('#r3dhSlug');
-	const $updateFP = $('#r3dhUpdateFrontpage');
 	const $createBtn = $('#r3dhCreate');
 	const $progress = $('#r3dhProgress');
 	const $progressMsg = $('#r3dhProgressMsg');
@@ -89,8 +87,6 @@
 		formData.append('nonce', nonce);
 		formData.append('pdf', selectedFile);
 		formData.append('title', title);
-		formData.append('slug', $.trim($slugInput.val()));
-		formData.append('update_frontpage', $updateFP.is(':checked') ? '1' : '');
 
 		$form.hide();
 		$result.hide();
@@ -124,24 +120,21 @@
 		let html = '<h3>✓ ' + escHtml('OK') + '</h3>';
 
 		if (data.page_url) {
-			html += '<p><strong>Page:</strong> <a href="' + escAttr(data.page_url) + '" target="_blank">'
+			html += '<p><strong>Stránka:</strong> <a href="' + escAttr(data.page_url) + '" target="_blank">'
 				+ escHtml(data.page_url) + '</a></p>';
 		}
 		if (data.shortcode) {
 			html += '<p><strong>Shortcode:</strong> <code>' + escHtml(data.shortcode) + '</code></p>';
 		}
 		if (data.thumbnail_url) {
-			html += '<p><strong>Thumbnail:</strong><br>'
+			html += '<p><strong>Náhled:</strong><br>'
 				+ '<img src="' + escAttr(data.thumbnail_url) + '" style="max-width:160px;height:auto;margin-top:6px;border:1px solid #c3c4c7;border-radius:4px;"></p>';
 		}
 
 		$result.addClass('r3dh-result--success').html(html).show();
 
-		// Reset for a new upload
-		$dropZone.show();
 		selectedFile = null;
 		$titleInput.val('');
-		$slugInput.val('');
 		$fileInput.val('');
 	}
 

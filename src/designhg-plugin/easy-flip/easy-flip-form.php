@@ -11,7 +11,7 @@ function designhg_easy_flip_render_page() {
 	if (!designhg_can_manage()) {
 		wp_die('Unauthorized');
 	}
-	$last     = designhg_easy_flip_get_last();
+
 	?>
 	<div class="wrap r3dh-wrap">
 		<h1 class="r3dh-title">
@@ -52,12 +52,6 @@ function designhg_easy_flip_render_page() {
 						<label for="r3dhTitle">Titulek</label>
 						<input type="text" id="r3dhTitle" placeholder="Název čísla...">
 					</div>
-
-					<div class="r3dh-field r3dh-field--page-slug">
-						<label for="r3dhSlug"><?php esc_html_e( 'Page slug (optional)', 'r3d-helper' ); ?></label>
-						<input type="text" id="r3dhSlug" placeholder="<?php esc_attr_e( 'auto-generated', 'r3d-helper' ); ?>">
-					</div>
-
 				</div>
 
 				<button class="button button-primary r3dh-btn-create" id="r3dhCreate" <?php disabled(!designhg_flipbook_exists()); ?>>
@@ -72,42 +66,6 @@ function designhg_easy_flip_render_page() {
 
 			<div class="r3dh-result" id="r3dhResult" style="display:none"></div>
 		</div>
-
-		<?php if ( ! empty( $last ) ) : ?>
-		<div class="r3dh-card r3dh-card--history">
-			<h2><?php esc_html_e( 'Last Created Flipbook', 'r3d-helper' ); ?></h2>
-			<table class="widefat striped">
-				<tr>
-					<th><?php esc_html_e( 'Title', 'r3d-helper' ); ?></th>
-					<td><?php echo esc_html( $last['title'] ?? '—' ); ?></td>
-				</tr>
-				<tr>
-					<th><?php esc_html_e( 'Flipbook ID', 'r3d-helper' ); ?></th>
-					<td><?php echo esc_html( $last['flipbook_id'] ?? '—' ); ?></td>
-				</tr>
-				<tr>
-					<th><?php esc_html_e( 'Page URL', 'r3d-helper' ); ?></th>
-					<td>
-						<?php if ( ! empty( $last['page_url'] ) ) : ?>
-							<a href="<?php echo esc_url( $last['page_url'] ); ?>" target="_blank">
-								<?php echo esc_url( $last['page_url'] ); ?>
-							</a>
-						<?php else : ?>—<?php endif; ?>
-					</td>
-				</tr>
-				<tr>
-					<th><?php esc_html_e( 'Shortcode', 'r3d-helper' ); ?></th>
-					<td><code><?php echo esc_html( $last['shortcode'] ?? '—' ); ?></code></td>
-				</tr>
-				<?php if ( ! empty( $last['thumbnail_url'] ) ) : ?>
-				<tr>
-					<th><?php esc_html_e( 'Thumbnail', 'r3d-helper' ); ?></th>
-					<td><img src="<?php echo esc_url( $last['thumbnail_url'] ); ?>" style="max-width:160px;height:auto;border:1px solid #ddd;"></td>
-				</tr>
-				<?php endif; ?>
-			</table>
-		</div>
-		<?php endif; ?>
 	</div>
 	<?php
 }

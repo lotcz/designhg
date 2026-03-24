@@ -80,7 +80,6 @@ add_action(
 		}
 
 		$title = sanitize_text_field($_POST['title'] ?? '');
-		$slug = sanitize_title($_POST['slug'] ?? '');
 
 		if (empty($title)) {
 			$title = pathinfo(sanitize_file_name($file['name']), PATHINFO_FILENAME);
@@ -88,13 +87,11 @@ add_action(
 			$title = ucwords($title);
 		}
 
-		$result = designhg_easyflip_run($file, $title, $slug, false);
+		$result = designhg_easyflip_run($file, $title);
 
 		if (is_wp_error($result)) {
 			wp_send_json_error(['message' => $result->get_error_message()]);
 		}
-
-		designhg_easy_flip_set_last($result);
 
 		wp_send_json_success($result);
 	}

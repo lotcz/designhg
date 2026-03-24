@@ -6,20 +6,10 @@ if (!defined('ABSPATH')) {
 
 require_once __DIR__ . '/easy-flip-thumbnail.php';
 
-const DESIGNHG_EASY_FLIP_FLIPBOOK_CPT = 'real3d-flipbook';
-
-const DESIGNHG_EASY_FLIP_LAST = 'designhg_easy_flip_last';
-
-function designhg_easy_flip_get_last() {
-	return get_option(DESIGNHG_EASY_FLIP_LAST, []);
-}
-
-function designhg_easy_flip_set_last($last) {
-	update_option(DESIGNHG_EASY_FLIP_LAST, $last);
-}
+const DESIGNHG_EASY_FLIP_TEMPLATE_ID = 1;
 
 function designhg_flipbook_exists(): bool {
-	return function_exists('real3d_flipbook_admin') || post_type_exists(DESIGNHG_EASY_FLIP_FLIPBOOK_CPT);
+	return function_exists('real3d_flipbook_admin');
 }
 
 function designhg_imageext_exists(): bool {
@@ -45,7 +35,7 @@ function designhg_upload_pdf(array $file, string $title) {
 
 	$attachment = [
 		'post_mime_type' => $file_type['type'],
-		'post_title' => $title,
+		'post_title' => $title . ' - PDF attachment',
 		'post_content' => '',
 		'post_status' => 'inherit',
 	];
@@ -62,48 +52,53 @@ function designhg_upload_pdf(array $file, string $title) {
 }
 
 /** Create Real3D Flipbook post */
-function designhg_create_flipbook(string $title, int $attachment_id, string $pdf_url) {
+function designhg_create_flipbook(string $title, string $pdf_url) {
 
-	$post_id = wp_insert_post([
-		'post_title' => $title,
-		'post_status' => 'publish',
-		'post_type' => DESIGNHG_EASY_FLIP_FLIPBOOK_CPT,
-		'post_content' => '',
-	], true);
-
-	if (is_wp_error($post_id)) {
-		return $post_id;
+	$real3dflipbooks_ids = get_option('real3dflipbooks_ids');
+	if (!$real3dflipbooks_ids) {
+		$real3dflipbooks_ids = array();
+	}
+	$flipbooks = array();
+	foreach ($real3dflipbooks_ids as $id) {
+		$book = get_option('real3dflipbook_'.$id);
+		if ($book) {
+			$flipbooks[$id] = $book;
+		}
 	}
 
-	/*
-	 * Real3D Flipbook stores its source as post meta.
-	 * The key names below match the plugin's default schema.
-	 * Adjust if your version uses different meta keys.
-	 */
-	update_post_meta($post_id, 'real3d_flipbook_pdf', $pdf_url);
-	update_post_meta($post_id, 'real3d_flipbook_pdf_attachment', $attachment_id);
+	$highest_id = 0;
+	foreach ($real3dflipbooks_ids as $id) {
+		if((int)$id > $highest_id) {
+			$highest_id = (int)$id;
+		}
+	}
+	$new_id = $highest_id + 1;
+	$flipbooks[$new_id] = $flipbooks[DESIGNHG_EASY_FLIP_TEMPLATE_ID];
+	$flipbooks[$new_id]["id"] = $new_id;
+	$flipbooks[$new_id]["name"] = $title;
+	$flipbooks[$new_id]["date"] = current_time( 'mysql' );
+	$flipbooks[$new_id]["type"] = 'pdf';
+	$flipbooks[$new_id]["pdfUrl"] = $pdf_url;
 
-	// Source type: 'pdf' tells the plugin to render from a PDF file
-	update_post_meta($post_id, 'real3d_flipbook_source_type', 'pdf');
+	add_option('real3dflipbook_'.(string)$new_id, $flipbooks[$new_id]);
 
-	return $post_id;
+	array_push($real3dflipbooks_ids, $new_id);
+	update_option('real3dflipbooks_ids', $real3dflipbooks_ids);
+
+	return $new_id;
 }
 
 function designhg_build_shortcode(int $flipbook_id): string {
 	return sprintf('[real3dflipbook id="%d"]', $flipbook_id);
 }
 
-function designhg_create_page(string $title, string $shortcode, string $slug, int $thumbnail_id) {
+function designhg_create_page(string $title, string $shortcode, int $thumbnail_id) {
 	$args = [
 		'post_title' => $title,
 		'post_content' => $shortcode,
 		'post_status' => 'publish',
 		'post_type' => 'page',
 	];
-
-	if ($slug) {
-		$args['post_name'] = $slug;
-	}
 
 	$page_id = wp_insert_post($args, true);
 
@@ -140,7 +135,7 @@ function designhg_update_frontpage(int $thumbnail_id, int $flipbook_id, int $pag
  * @param bool $update_frontpage
  * @return array|WP_Error
  */
-function designhg_easyflip_run(array $file, string $title, string $slug, bool $update_frontpage) {
+function designhg_easyflip_run(array $file, string $title) {
 
 	// 1. Upload PDF -------------------------------------------------------
 	$attachment_id = designhg_upload_pdf($file, $title);
@@ -151,7 +146,7 @@ function designhg_easyflip_run(array $file, string $title, string $slug, bool $u
 	$pdf_url = wp_get_attachment_url($attachment_id);
 
 	// 2. Create flipbook post ---------------------------------------------
-	$flipbook_id =  designhg_create_flipbook($title, $attachment_id, $pdf_url);
+	$flipbook_id = designhg_create_flipbook($title, $pdf_url);
 	if (is_wp_error($flipbook_id)) {
 		return $flipbook_id;
 	}
@@ -169,14 +164,14 @@ function designhg_easyflip_run(array $file, string $title, string $slug, bool $u
 
 	// 4. Create page with shortcode ---------------------------------------
 	$shortcode = designhg_build_shortcode($flipbook_id);
-	$page_id = designhg_create_page($title, $shortcode, $slug, $thumbnail_id ?: 0);
+	$page_id = designhg_create_page($title, $shortcode, $thumbnail_id ?: 0);
 	if (is_wp_error($page_id)) {
 		return $page_id;
 	}
 	$page_url = get_permalink($page_id);
 
 	// 5. Update front page ------------------------------------------------
-	if ($update_frontpage && $thumbnail_id && !is_wp_error($thumbnail_id)) {
+	if ($thumbnail_id && !is_wp_error($thumbnail_id)) {
 		designhg_update_frontpage($thumbnail_id, $flipbook_id, $page_id);
 	}
 
