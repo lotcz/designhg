@@ -28,6 +28,9 @@ RUN docker-php-ext-install -j$(nproc) gd
 # Install PHP extensions
 RUN docker-php-ext-install intl pdo pdo_mysql mysqli
 
+# Install MBSTRING PHP extension
+RUN docker-php-ext-install mbstring && docker-php-ext-enable mbstring
+
 # Install Imagemagick extension
 RUN pecl install imagick && docker-php-ext-enable imagick
 

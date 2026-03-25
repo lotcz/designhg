@@ -1,5 +1,7 @@
 <?php
 
+use Zavadil\Common\Helpers\PathHelper;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -51,7 +53,7 @@ function designhg_upload_pdf(array $file, string $title) {
 	return $attach_id;
 }
 
-/** Create Real3D Flipbook post */
+/** Create Real3D Flipbook */
 function designhg_create_flipbook(string $title, string $pdf_url) {
 
 	$real3dflipbooks_ids = get_option('real3dflipbooks_ids');
@@ -109,31 +111,32 @@ function designhg_create_page(string $title, string $shortcode, int $thumbnail_i
 	return $page_id;
 }
 
-function designhg_update_frontpage(int $thumbnail_id, int $flipbook_id, int $page_id): void {
-	$front_id = (int)get_option('page_on_front');
+const CURRENT_THUMB_PATH = ABSPATH . 'online/titulka/aktualni.jpg';
 
-	if ($front_id) {
-		// Static front page: update its featured image
-		set_post_thumbnail($front_id, $thumbnail_id);
+function designhg_update_frontpage(int $thumbnail_id): void {
+	$thumb_file = get_attached_file($thumbnail_id);
 
-		// Store a reference to the latest flipbook for theme use
-		update_post_meta($front_id, '_r3dh_latest_flipbook_id', $flipbook_id);
-		update_post_meta($front_id, '_r3dh_latest_flipbook_page', $page_id);
+	error_log($thumb_file);
+
+	if (file_exists(CURRENT_THUMB_PATH)) {
+		$bckDir = PathHelper::getDirectory(CURRENT_THUMB_PATH);
+		$bckName = PathHelper::getFileBase(CURRENT_THUMB_PATH) . '-backup-' . date('Y-m-d');
+		$bckExt = PathHelper::getFileExt(CURRENT_THUMB_PATH);
+		$i = 0;
+		$bckPath = PathHelper::of($bckDir, $bckName . $bckExt);
+		while (file_exists($bckPath)) {
+			$i++;
+			$bckPath = PathHelper::of($bckDir, $bckName . '-' . $i . '.' . $bckExt);
+		}
+		error_log($bckPath);
+		copy(CURRENT_THUMB_PATH, $bckPath);
 	}
 
-	// Always store globally so themes can retrieve it without a post ID
-	update_option('r3dh_latest_flipbook_id', $flipbook_id);
-	update_option('r3dh_latest_flipbook_page_id', $page_id);
-	update_option('r3dh_latest_flipbook_thumb_id', $thumbnail_id);
-	update_option('r3dh_latest_flipbook_thumb_url', wp_get_attachment_url($thumbnail_id));
+	copy($thumb_file, CURRENT_THUMB_PATH);
 }
 
 /**
- * @param array $file $_FILES entry
- * @param string $title
- * @param string $slug optional page slug
- * @param bool $update_frontpage
- * @return array|WP_Error
+ Main method that will process PDF, create flipbook and update thumbnail
  */
 function designhg_easyflip_run(array $file, string $title) {
 
@@ -145,22 +148,17 @@ function designhg_easyflip_run(array $file, string $title) {
 
 	$pdf_url = wp_get_attachment_url($attachment_id);
 
-	// 2. Create flipbook post ---------------------------------------------
+	// 2. Create flipbook
 	$flipbook_id = designhg_create_flipbook($title, $pdf_url);
 	if (is_wp_error($flipbook_id)) {
 		return $flipbook_id;
 	}
 
 	// 3. Generate thumbnail -----------------------------------------------
-	$thumb_handler = new R3DH_Thumbnail();
-	$thumbnail_id = $thumb_handler->generate($attachment_id, $title);
-	$thumbnail_url = '';
+	$thumbnail_id = designhg_thumbnail_generate($attachment_id, $title);
+	$thumbnail_url = wp_get_attachment_url($thumbnail_id);
 
-	if (!is_wp_error($thumbnail_id) && $thumbnail_id) {
-		// Attach thumbnail to the flipbook post
-		set_post_thumbnail($flipbook_id, $thumbnail_id);
-		$thumbnail_url = wp_get_attachment_url($thumbnail_id);
-	}
+	if (is_wp_error($thumbnail_id)) return $thumbnail_id;
 
 	// 4. Create page with shortcode ---------------------------------------
 	$shortcode = designhg_build_shortcode($flipbook_id);
@@ -172,7 +170,7 @@ function designhg_easyflip_run(array $file, string $title) {
 
 	// 5. Update front page ------------------------------------------------
 	if ($thumbnail_id && !is_wp_error($thumbnail_id)) {
-		designhg_update_frontpage($thumbnail_id, $flipbook_id, $page_id);
+		designhg_update_frontpage($thumbnail_id);
 	}
 
 	return [

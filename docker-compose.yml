@@ -26,6 +26,14 @@ services:
       - "21:21"
       - "21000-21010:21000-21010"
 
+  composer:
+    image: composer:2
+    container_name: designhg-composer
+    volumes:
+      - ./src/designhg-plugin:/app
+    working_dir: /app
+    command: install
+
   php:
     build:
       context: .
@@ -49,6 +57,7 @@ services:
     depends_on:
       - db
       - ftp
+      - composer
 
   nginx:
     image: nginx:alpine
