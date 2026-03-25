@@ -111,7 +111,7 @@ function designhg_create_page(string $title, string $shortcode, int $thumbnail_i
 	return $page_id;
 }
 
-const CURRENT_THUMB_PATH = ABSPATH . 'online/titulka/aktualni.jpg';
+const CURRENT_THUMB_PATH = ABSPATH . '/titulka/aktualni.jpg';
 
 function designhg_update_frontpage(int $thumbnail_id): void {
 	$thumb_file = get_attached_file($thumbnail_id);
@@ -123,7 +123,7 @@ function designhg_update_frontpage(int $thumbnail_id): void {
 		$bckName = PathHelper::getFileBase(CURRENT_THUMB_PATH) . '-backup-' . date('Y-m-d');
 		$bckExt = PathHelper::getFileExt(CURRENT_THUMB_PATH);
 		$i = 0;
-		$bckPath = PathHelper::of($bckDir, $bckName . $bckExt);
+		$bckPath = PathHelper::of($bckDir, $bckName . '.' . $bckExt);
 		while (file_exists($bckPath)) {
 			$i++;
 			$bckPath = PathHelper::of($bckDir, $bckName . '-' . $i . '.' . $bckExt);

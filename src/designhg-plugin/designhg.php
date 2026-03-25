@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Design H&G
  * Description: Plugin pro Design H&G
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Karel
  * Text Domain: designhg
  * Requires at least: 5.7
