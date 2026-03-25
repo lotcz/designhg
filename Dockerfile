@@ -14,7 +14,9 @@ RUN apt-get update && apt-get install -y \
 	libjpeg-dev \
 	libavif-dev \
 	libjpeg62-turbo-dev \
-	libwebp-dev
+	libwebp-dev \
+	libmagickwand-dev \
+	imagemagick
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -26,19 +28,13 @@ RUN docker-php-ext-install -j$(nproc) gd
 # Install PHP extensions
 RUN docker-php-ext-install intl pdo pdo_mysql mysqli
 
+# Install Imagemagick extension
+RUN pecl install imagick && docker-php-ext-enable imagick
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Xdebug
-# RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
-
-# Copy existing application directory contents
-#COPY ./src /var/www/html
-
-# Copy existing application directory permissions
-#COPY --chown=www-data:www-data . /var/www/html
